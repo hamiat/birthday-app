@@ -46,7 +46,7 @@ def main():
     print(f"{equals_signs} Result {equals_signs}")
 
     if len(people) > 1:
-        people_sorted = sorted(people, key=lambda person: person.age)
+        people_sorted = sorted(people, key=lambda person: person.age_delta)
         youngest = people_sorted[0]
         oldest= people_sorted[-1]
         print(f"The oldest is {oldest.name} and youngest is {youngest.name}")
