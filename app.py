@@ -15,7 +15,7 @@ def validate_date(date_string) -> bool:
         return False
 
 
-def add_people(dashes: str, people: list):
+def add_people(separator: str, people: list):
     while True:
         name = input("Please enter a name: ")
 
@@ -26,38 +26,33 @@ def add_people(dashes: str, people: list):
         if name.lower() == "x":
             print(f"Goodbye! Processing data...\n")
             break
-        else:
+
+        birthday = input("Please enter birthday (yyyy-mm-dd): ").strip()
+
+        if validate_date(birthday):
+            birthday = date.fromisoformat(birthday)
             today = date.today()
-            birthday = input("Please enter birthday (yyyy-mm-dd): ")
-
-            if validate_date(birthday):
-                birthday = date.fromisoformat(birthday)
-                person = Person(name, today - birthday)
-                people.append(person)
-                print(f"✔️   {person.name} was added! \n\n{dashes}")
-            else:
-                print(
-                    f"❌  {name} was not added due to incorrect birthday format, should be yyyy-mm-dd.  \n\n{dashes}"
-                )
+            person = Person(name, today - birthday)
+            people.append(person)
+            print(f"✔️   {person.name} was added! \n\n{separator}")
+        else:
+            print(
+                f"❌  {name} was not added due to incorrect birthday format (should be yyyy-mm-dd).\n\n{separator}"
+            )
 
 
-def main():
-    people = []
-    equals_signs = "=" * 10
-    dashes = "-" * 36
+def display_result(people: list[Person]):
+    divider = "=" * 10
 
-    print(
-        f"\n=== Welcome to my app!===\nAdd a name and a birthday for as many people as you want.\nWhen you are done, type 'x' to finish. I'll tell you who is the oldest and who is the youngest.\n\n{dashes}"
-    )
-
-    add_people(dashes, people)
-    print(f"{equals_signs} Result {equals_signs}")
+    print(f"{divider} Result {divider}")
 
     if len(people) > 1:
-        people_sorted = sorted(people, key=lambda person: person.age_delta)
-        youngest = people_sorted[0]
-        oldest = people_sorted[-1]
-        print(f"The oldest is {oldest.name} and youngest is {youngest.name}")
+        people_sorted = sorted(
+            people, key=lambda person: person.age_delta, reverse=True
+        )
+        oldest = people_sorted[0]
+        youngest = people_sorted[-1]
+        print(f"The oldest is {oldest.name} and youngest is {youngest.name}.")
     elif len(people) == 1:
         print(
             f"Only one person ({people[0].name}) was added, so they are the oldest and youngest."
@@ -65,7 +60,22 @@ def main():
     else:
         print("No data was found.")
 
-    print(f"{equals_signs * 2}========")
+    print(f"{divider * 2}========")
+
+
+def main():
+    people = []
+    separator = "-" * 36
+
+    print(
+        "\n=== Welcome to my app! ===\n"
+        "Add a name and a birthday for as many people as you want.\n"
+        "When you are done, type 'x' to finish. I'll tell you who is the oldest and who is the youngest.\n\n"
+        f"{separator}"
+    )
+
+    add_people(separator, people)
+    display_result(people)
 
 
 if __name__ == "__main__":
